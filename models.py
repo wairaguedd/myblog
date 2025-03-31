@@ -110,3 +110,44 @@ class Contact(db.Model):
     
     def __repr__(self):
         return f'<Contact from {self.name}>'
+
+# Association table for portfolio projects and tags
+portfolio_tags = db.Table('portfolio_tags',
+    db.Column('project_id', db.Integer, db.ForeignKey('portfolio_project.id'), primary_key=True),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True)
+)
+
+class PortfolioProject(db.Model):
+    """Portfolio project model for showcasing work."""
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    slug = db.Column(db.String(200), unique=True, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(500))
+    project_url = db.Column(db.String(500))
+    github_url = db.Column(db.String(500))
+    featured = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    published = db.Column(db.Boolean, default=False)
+    tags = db.relationship('Tag', secondary=portfolio_tags, 
+                          backref=db.backref('portfolio_projects', lazy='dynamic'))
+    
+    def get_html_content(self):
+        """Convert markdown content to safe HTML."""
+        html = markdown.markdown(self.content, extensions=['extra', 'codehilite'])
+        # Define allowed tags and attributes for security
+        allowed_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'ul', 'ol', 
+                        'li', 'strong', 'em', 'code', 'pre', 'blockquote', 'img', 
+                        'hr', 'br']
+        allowed_attrs = {
+            'a': ['href', 'title', 'target'],
+            'img': ['src', 'alt', 'title']
+        }
+        # Clean the HTML to remove potentially dangerous code
+        clean_html = bleach.clean(html, tags=allowed_tags, attributes=allowed_attrs)
+        return clean_html
+    
+    def __repr__(self):
+        return f'<Portfolio Project {self.title}>'

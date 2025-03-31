@@ -58,3 +58,17 @@ class SearchForm(FlaskForm):
     """Form for searching blog posts."""
     query = StringField('Search', validators=[DataRequired()])
     submit = SubmitField('Search')
+    
+class PortfolioProjectForm(FlaskForm):
+    """Form for creating and editing portfolio projects."""
+    title = StringField('Title', validators=[DataRequired(), Length(min=1, max=200)])
+    slug = StringField('Slug', validators=[DataRequired(), Length(min=1, max=200)])
+    description = TextAreaField('Short Description', validators=[DataRequired(), Length(max=500)])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    image_url = StringField('Image URL', validators=[Length(max=500)])
+    project_url = StringField('Project URL', validators=[Length(max=500)])
+    github_url = StringField('GitHub URL', validators=[Length(max=500)])
+    featured = BooleanField('Featured')
+    published = BooleanField('Published')
+    tags = StringField('Tags (comma separated)', validators=[Length(max=200)])
+    submit = SubmitField('Save Project')

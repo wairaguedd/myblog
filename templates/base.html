@@ -38,6 +38,10 @@
                            href="{{ url_for('main.index') }}">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('main.portfolio') %}active{% endif %}"
+                           href="{{ url_for('main.portfolio') }}">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == url_for('main.about') %}active{% endif %}"
                            href="{{ url_for('main.about') }}">About</a>
                     </li>
@@ -140,6 +144,7 @@
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="{{ url_for('main.index') }}" class="text-white">Home</a></li>
+                        <li><a href="{{ url_for('main.portfolio') }}" class="text-white">Portfolio</a></li>
                         <li><a href="{{ url_for('main.about') }}" class="text-white">About</a></li>
                         <li><a href="{{ url_for('main.contact') }}" class="text-white">Contact</a></li>
                     </ul>

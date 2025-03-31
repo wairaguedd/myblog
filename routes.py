@@ -4,8 +4,8 @@ from sqlalchemy import desc
 from werkzeug.security import check_password_hash
 from datetime import datetime
 
-from models import db, User, Category, Tag, Post, Comment, Contact
-from forms import LoginForm, PostForm, CategoryForm, TagForm, CommentForm, ContactForm, SearchForm
+from models import db, User, Category, Tag, Post, Comment, Contact, PortfolioProject
+from forms import LoginForm, PostForm, CategoryForm, TagForm, CommentForm, ContactForm, SearchForm, PortfolioProjectForm
 from utils import generate_slug, get_or_create_tags, search_posts
 
 from functools import wraps
@@ -144,6 +144,39 @@ def search():
                          query=query,
                          posts=posts)
 
+@main.route('/portfolio')
+def portfolio():
+    """Portfolio page showing projects."""
+    projects = PortfolioProject.query.filter_by(published=True).order_by(
+        desc(PortfolioProject.created_at)).all()
+    
+    featured_projects = [p for p in projects if p.featured]
+    regular_projects = [p for p in projects if not p.featured]
+    
+    # Get tags for sidebar
+    tags = Tag.query.order_by(Tag.name).all()
+    
+    return render_template('portfolio.html',
+                         title='Portfolio',
+                         featured_projects=featured_projects,
+                         projects=regular_projects,
+                         tags=tags)
+
+@main.route('/portfolio/<string:slug>')
+def portfolio_project(slug):
+    """Individual portfolio project page."""
+    project = PortfolioProject.query.filter_by(slug=slug, published=True).first_or_404()
+    
+    # Get categories and tags for the sidebar
+    tags = Tag.query.order_by(Tag.name).all()
+    categories = Category.query.order_by(Category.name).all()
+    
+    return render_template('portfolio_project.html',
+                         title=project.title,
+                         project=project,
+                         categories=categories,
+                         tags=tags)
+
 # Admin routes
 
 @admin.route('/login', methods=['GET', 'POST'])
@@ -191,8 +224,15 @@ def dashboard():
     contact_count = Contact.query.count()
     unread_contact_count = Contact.query.filter_by(read=False).count()
     
+    # Portfolio statistics
+    portfolio_count = PortfolioProject.query.count()
+    published_portfolio_count = PortfolioProject.query.filter_by(published=True).count()
+    draft_portfolio_count = portfolio_count - published_portfolio_count
+    featured_portfolio_count = PortfolioProject.query.filter_by(featured=True).count()
+    
     recent_posts = Post.query.order_by(desc(Post.created_at)).limit(5).all()
     recent_comments = Comment.query.order_by(desc(Comment.created_at)).limit(5).all()
+    recent_projects = PortfolioProject.query.order_by(desc(PortfolioProject.created_at)).limit(3).all()
     
     return render_template('admin/dashboard.html',
                          title='Admin Dashboard',
@@ -205,8 +245,13 @@ def dashboard():
                          pending_comment_count=pending_comment_count,
                          contact_count=contact_count,
                          unread_contact_count=unread_contact_count,
+                         portfolio_count=portfolio_count,
+                         published_portfolio_count=published_portfolio_count,
+                         draft_portfolio_count=draft_portfolio_count,
+                         featured_portfolio_count=featured_portfolio_count,
                          recent_posts=recent_posts,
-                         recent_comments=recent_comments)
+                         recent_comments=recent_comments,
+                         recent_projects=recent_projects)
 
 @admin.route('/posts')
 @login_required
@@ -424,3 +469,100 @@ def delete_tag(id):
     
     flash('Tag deleted!', 'success')
     return redirect(url_for('admin.manage_tags'))
+
+# Portfolio management routes
+@admin.route('/portfolio')
+@login_required
+def manage_portfolio():
+    """Admin page for managing portfolio projects."""
+    projects = PortfolioProject.query.order_by(desc(PortfolioProject.created_at)).all()
+    return render_template('admin/manage_portfolio.html',
+                         title='Manage Portfolio',
+                         projects=projects)
+
+@admin.route('/portfolio/create', methods=['GET', 'POST'])
+@login_required
+def create_portfolio_project():
+    """Admin page for creating a new portfolio project."""
+    form = PortfolioProjectForm()
+    
+    if form.validate_on_submit():
+        # Process the form data
+        title = form.title.data
+        slug = form.slug.data if form.slug.data else generate_slug(title)
+        
+        # Get or create tags
+        tag_names = [t.strip() for t in form.tags.data.split(',') if t.strip()]
+        tags = get_or_create_tags(tag_names)
+        
+        # Create the project
+        project = PortfolioProject(
+            title=title,
+            slug=slug,
+            description=form.description.data,
+            content=form.content.data,
+            image_url=form.image_url.data,
+            project_url=form.project_url.data,
+            github_url=form.github_url.data,
+            featured=form.featured.data,
+            published=form.published.data
+        )
+        
+        # Add tags
+        project.tags = tags
+        
+        db.session.add(project)
+        db.session.commit()
+        
+        flash('Portfolio project created successfully!', 'success')
+        return redirect(url_for('admin.manage_portfolio'))
+    
+    # Auto-generate slug from title using JavaScript (handled in template)
+    return render_template('admin/create_portfolio_project.html',
+                         title='Create Portfolio Project',
+                         form=form)
+
+@admin.route('/portfolio/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_portfolio_project(id):
+    """Admin page for editing an existing portfolio project."""
+    project = PortfolioProject.query.get_or_404(id)
+    form = PortfolioProjectForm(obj=project)
+    
+    if request.method == 'GET':
+        # Pre-populate tags field
+        form.tags.data = ', '.join([tag.name for tag in project.tags])
+    
+    if form.validate_on_submit():
+        # Update slug if needed
+        if not form.slug.data:
+            form.slug.data = generate_slug(form.title.data)
+        
+        # Update project object from form
+        form.populate_obj(project)
+        
+        # Update tags
+        tag_names = [t.strip() for t in form.tags.data.split(',') if t.strip()]
+        tags = get_or_create_tags(tag_names)
+        project.tags = tags
+        
+        db.session.commit()
+        
+        flash('Portfolio project updated successfully!', 'success')
+        return redirect(url_for('admin.manage_portfolio'))
+    
+    return render_template('admin/edit_portfolio_project.html',
+                         title='Edit Portfolio Project',
+                         form=form,
+                         project=project)
+
+@admin.route('/portfolio/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_portfolio_project(id):
+    """Delete a portfolio project."""
+    project = PortfolioProject.query.get_or_404(id)
+    db.session.delete(project)
+    db.session.commit()
+    
+    flash('Portfolio project deleted successfully!', 'success')
+    return redirect(url_for('admin.manage_portfolio'))

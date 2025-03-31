@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block meta_description %}{{ project.description }}{% endblock %}
+{% block meta_keywords %}{% for tag in project.tags %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endblock %}
+{% block og_description %}{{ project.description }}{% endblock %}
+
+{% block content %}
+<article class="portfolio-project">
+    <div class="mb-4">
+        <a href="{{ url_for('main.portfolio') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Portfolio
+        </a>
+    </div>
+    
+    <header class="mb-4">
+        <h1>{{ project.title }}</h1>
+        <div class="meta text-muted mb-3">
+            <small>Last updated: {{ project.updated_at.strftime('%B %d, %Y') }}</small>
+        </div>
+        
+        {% if project.tags %}
+        <div class="tags mb-3">
+            {% for tag in project.tags %}
+            <a href="{{ url_for('main.tag', slug=tag.slug) }}" class="badge bg-secondary text-decoration-none me-1">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="project-links mb-3">
+            {% if project.project_url %}
+            <a href="{{ project.project_url }}" target="_blank" class="btn btn-primary me-2">
+                <i class="fas fa-external-link-alt"></i> View Live Project
+            </a>
+            {% endif %}
+            
+            {% if project.github_url %}
+            <a href="{{ project.github_url }}" target="_blank" class="btn btn-dark">
+                <i class="fab fa-github"></i> View on GitHub
+            </a>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if project.image_url %}
+    <div class="project-image mb-4">
+        <img src="{{ project.image_url }}" alt="{{ project.title }}" class="img-fluid rounded">
+    </div>
+    {% endif %}
+    
+    <div class="project-description mb-4">
+        <h2>Project Overview</h2>
+        <p class="lead">{{ project.description }}</p>
+    </div>
+    
+    <div class="project-content mb-5">
+        {{ project.get_html_content()|safe }}
+    </div>
+    
+    <div class="project-navigation border-top pt-4">
+        <a href="{{ url_for('main.portfolio') }}" class="btn btn-outline-primary">
+            <i class="fas fa-th"></i> View All Projects
+        </a>
+    </div>
+</article>
+{% endblock %}
+
+{% block sidebar %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Project Info</h5>
+    </div>
+    <div class="card-body">
+        <p>This is one of my portfolio projects. Check out my other work in the portfolio section.</p>
+        <a href="{{ url_for('main.portfolio') }}" class="btn btn-primary">View Portfolio</a>
+    </div>
+</div>
+
+{% if project.tags %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Technologies Used</h5>
+    </div>
+    <div class="card-body">
+        <div class="tags-cloud">
+            {% for tag in project.tags %}
+            <a href="{{ url_for('main.tag', slug=tag.slug) }}" class="badge bg-secondary text-decoration-none m-1">
+                {{ tag.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

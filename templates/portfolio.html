@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Portfolio showcasing my projects and work{% endblock %}
+{% block meta_keywords %}portfolio, projects, web development, software development{% endblock %}
+{% block og_description %}Check out my portfolio of projects and work{% endblock %}
+
+{% block content %}
+<div class="portfolio-page">
+    <h1 class="mb-4">My Portfolio</h1>
+    <p class="lead mb-5">Welcome to my portfolio. Here you'll find a collection of my projects and work that showcase my skills and experience.</p>
+    
+    {% if featured_projects %}
+    <section class="featured-projects mb-5">
+        <h2 class="border-bottom pb-2 mb-4">Featured Projects</h2>
+        <div class="row">
+            {% for project in featured_projects %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if project.image_url %}
+                    <img src="{{ project.image_url }}" class="card-img-top" alt="{{ project.title }}">
+                    {% else %}
+                    <div class="card-img-top bg-light text-center py-5">
+                        <i class="fas fa-code fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title h5">
+                            <a href="{{ url_for('main.portfolio_project', slug=project.slug) }}" class="text-decoration-none">
+                                {{ project.title }}
+                            </a>
+                        </h3>
+                        <p class="card-text small text-muted">
+                            {% for tag in project.tags[:3] %}
+                            <span class="badge bg-secondary me-1">{{ tag.name }}</span>
+                            {% endfor %}
+                            {% if project.tags|length > 3 %}
+                            <span class="badge bg-light text-dark">+{{ project.tags|length - 3 }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="card-text">{{ project.description|truncate(150) }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="{{ url_for('main.portfolio_project', slug=project.slug) }}" class="btn btn-sm btn-outline-primary">Details</a>
+                                {% if project.project_url %}
+                                <a href="{{ project.project_url }}" target="_blank" class="btn btn-sm btn-outline-secondary">Live Demo</a>
+                                {% endif %}
+                            </div>
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" target="_blank" class="text-muted">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+    
+    {% if projects %}
+    <section class="all-projects">
+        <h2 class="border-bottom pb-2 mb-4">All Projects</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for project in projects %}
+            <div class="col mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if project.image_url %}
+                    <img src="{{ project.image_url }}" class="card-img-top" alt="{{ project.title }}">
+                    {% else %}
+                    <div class="card-img-top bg-light text-center py-4">
+                        <i class="fas fa-laptop-code fa-2x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title h5">
+                            <a href="{{ url_for('main.portfolio_project', slug=project.slug) }}" class="text-decoration-none">
+                                {{ project.title }}
+                            </a>
+                        </h3>
+                        <p class="card-text small text-muted mb-2">
+                            {% for tag in project.tags[:2] %}
+                            <span class="badge bg-secondary me-1">{{ tag.name }}</span>
+                            {% endfor %}
+                            {% if project.tags|length > 2 %}
+                            <span class="badge bg-light text-dark">+{{ project.tags|length - 2 }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="card-text small">{{ project.description|truncate(100) }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 pt-0">
+                        <a href="{{ url_for('main.portfolio_project', slug=project.slug) }}" class="btn btn-sm btn-outline-primary">View Project</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+    
+    {% if not featured_projects and not projects %}
+    <div class="text-center my-5 py-5">
+        <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+        <h3>No projects available yet</h3>
+        <p class="text-muted">Check back soon for updates to my portfolio.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">About My Projects</h5>
+    </div>
+    <div class="card-body">
+        <p>Here you'll find a collection of my personal and professional projects. Each project demonstrates different skills and technologies.</p>
+        <p>Click on any project to learn more about its development process, challenges, and outcomes.</p>
+    </div>
+</div>
+
+{% if tags %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Technology Tags</h5>
+    </div>
+    <div class="card-body">
+        <div class="tags-cloud">
+            {% for tag in tags %}
+            <a href="{{ url_for('main.tag', slug=tag.slug) }}" class="badge bg-secondary text-decoration-none m-1">
+                {{ tag.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Get In Touch</h5>
+    </div>
+    <div class="card-body">
+        <p>Interested in working together? Have questions about my projects?</p>
+        <a href="{{ url_for('main.contact') }}" class="btn btn-primary">Contact Me</a>
+    </div>
+</div>
+{% endblock %}

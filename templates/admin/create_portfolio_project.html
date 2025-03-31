@@ -1,0 +1,212 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Create Portfolio Project</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('admin.manage_portfolio') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Portfolio
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <form method="post" id="portfolioForm">
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-3">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control", id="titleInput") }}
+                {% if form.title.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.slug.label(class="form-label") }}
+                {{ form.slug(class="form-control") }}
+                {% if form.slug.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.slug.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="form-text">
+                    Leave blank to auto-generate from title. Use only lowercase letters, numbers, and hyphens.
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", rows="3") }}
+                {% if form.description.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.description.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="form-text">
+                    A brief summary of the project that will appear in project cards and previews.
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.content.label(class="form-label") }}
+                {{ form.content(class="form-control", rows="10") }}
+                {% if form.content.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.content.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="form-text">
+                    Markdown is supported. Describe your project in detail, including challenges, solutions, and outcomes.
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.image_url.label(class="form-label") }}
+                {{ form.image_url(class="form-control") }}
+                {% if form.image_url.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.image_url.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="form-text">
+                    URL to the project screenshot or featured image.
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        {{ form.project_url.label(class="form-label") }}
+                        {{ form.project_url(class="form-control") }}
+                        {% if form.project_url.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.project_url.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">
+                            URL to the live project (optional).
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        {{ form.github_url.label(class="form-label") }}
+                        {{ form.github_url(class="form-control") }}
+                        {% if form.github_url.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.github_url.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">
+                            URL to the GitHub repository (optional).
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.tags.label(class="form-label") }}
+                {{ form.tags(class="form-control") }}
+                {% if form.tags.errors %}
+                <div class="invalid-feedback d-block">
+                    {% for error in form.tags.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="form-text">
+                    Enter tags separated by commas (e.g. "Python, Web Development, Flask").
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="form-check form-switch">
+                    {{ form.featured(class="form-check-input") }}
+                    {{ form.featured.label(class="form-check-label") }}
+                </div>
+                <div class="form-text">
+                    Featured projects appear in a prominent section at the top of the portfolio page.
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="form-check form-switch">
+                    {{ form.published(class="form-check-input") }}
+                    {{ form.published.label(class="form-check-label") }}
+                </div>
+                <div class="form-text">
+                    Only published projects are visible to visitors.
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('admin.manage_portfolio') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Project Tips</h5>
+            </div>
+            <div class="card-body">
+                <h6>Writing Effective Project Descriptions</h6>
+                <ul>
+                    <li>Clearly explain what the project does</li>
+                    <li>Highlight technologies and tools used</li>
+                    <li>Mention challenges and your solutions</li>
+                    <li>Include outcomes and lessons learned</li>
+                </ul>
+                
+                <h6>Markdown Tips</h6>
+                <ul>
+                    <li>Use <code>#</code> for headings</li>
+                    <li>Use <code>*</code> for italic and <code>**</code> for bold</li>
+                    <li>Use <code>- </code> for bullet points</li>
+                    <li>Use <code>```code```</code> for code blocks</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-generate slug from title
+    document.getElementById('titleInput').addEventListener('blur', function() {
+        const slugField = document.querySelector('input[name="slug"]');
+        // Only auto-generate if slug field is empty
+        if (slugField.value === '') {
+            const titleValue = this.value;
+            // Convert to lowercase, replace spaces with hyphens, remove special chars
+            const slugValue = titleValue.toLowerCase()
+                .replace(/[^\w\s-]/g, '')  // Remove special characters
+                .replace(/\s+/g, '-')      // Replace spaces with hyphens
+                .replace(/-+/g, '-');      // Replace multiple hyphens with single hyphen
+            
+            slugField.value = slugValue;
+        }
+    });
+</script>
+{% endblock %}
