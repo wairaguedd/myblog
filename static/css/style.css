@@ -1,0 +1,199 @@
+/* Main styling for the blog */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* Header and Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Blog post styling */
+.blog-post {
+    margin-bottom: 2rem;
+}
+
+.blog-post-title {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.blog-post-meta {
+    margin-bottom: 1.5rem;
+    color: #6c757d;
+}
+
+.blog-post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.blog-post-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
+}
+
+.blog-post-content h1, 
+.blog-post-content h2, 
+.blog-post-content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.blog-post-content blockquote {
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+    font-style: italic;
+    color: #6c757d;
+    margin: 1.5rem 0;
+}
+
+.blog-post-content pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow: auto;
+}
+
+.blog-post-content code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+}
+
+.blog-post-share {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Comments section */
+.blog-comments {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Category and tag badges */
+.tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.badge {
+    margin-right: 0.3rem;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+/* Sidebar */
+.sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+/* Admin dashboard */
+.admin-dashboard .card {
+    transition: transform 0.2s ease;
+}
+
+.admin-dashboard .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Form styling */
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* About page */
+.about-page .progress {
+    height: 8px;
+    margin-bottom: 1rem;
+}
+
+.about-page .card {
+    transition: transform 0.3s ease;
+}
+
+.about-page .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Footer */
+footer {
+    margin-top: 3rem;
+}
+
+footer a {
+    transition: opacity 0.2s ease;
+}
+
+footer a:hover {
+    opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .blog-post-content {
+        font-size: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Admin area specific styles */
+.icon-container {
+    width: 40px;
+    text-align: center;
+}
+
+/* Search result highlighting */
+.search-results .card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+/* SimpleMDE editor customizations */
+.editor-toolbar {
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.CodeMirror {
+    border-radius: 0 0 0.25rem 0.25rem;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Admin tables */
+.admin-table th {
+    background-color: #f8f9fa;
+}
+
+.admin-table .actions {
+    width: 150px;
+}

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Learn more about the author of this personal blog{% endblock %}
+{% block meta_keywords %}about, blog author, personal, biography{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <h1 class="mb-4">About Me</h1>
+    
+    <div class="row mb-5">
+        <div class="col-md-4 text-center">
+            <!-- Using Font Awesome for a user icon instead of an image -->
+            <div class="display-1 text-primary mb-3">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h3>John Doe</h3>
+            <p class="text-muted">Blogger & Developer</p>
+        </div>
+        <div class="col-md-8">
+            <h2>Welcome to My Blog</h2>
+            <p>
+                Hello! I'm John Doe, the author of this blog. I'm passionate about technology, 
+                writing, and sharing knowledge with others. This blog is my digital playground 
+                where I share my thoughts, experiences, and insights on various topics.
+            </p>
+            <p>
+                With a background in software development and a love for writing, I created this 
+                space to combine my two passions and connect with like-minded individuals from 
+                around the world.
+            </p>
+        </div>
+    </div>
+    
+    <div class="my-story mb-5">
+        <h2>My Story</h2>
+        <p>
+            I started my journey in the tech world over a decade ago. What began as a curiosity 
+            quickly evolved into a career and a lifelong passion. Throughout the years, I've 
+            worked on various projects, learned numerous programming languages, and collaborated 
+            with talented individuals who have shaped my perspective and approach to problem-solving.
+        </p>
+        <p>
+            In 2018, I decided to start this blog as a way to document my learnings and share them 
+            with a broader audience. It's been an incredible journey, and I'm grateful for every 
+            reader who has joined me along the way.
+        </p>
+    </div>
+    
+    <div class="what-i-write-about mb-5">
+        <h2>What I Write About</h2>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-laptop-code fa-3x text-primary mb-3"></i>
+                        <h3 class="card-title">Technology</h3>
+                        <p class="card-text">Latest trends, tutorials, and insights from the tech world.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-book fa-3x text-primary mb-3"></i>
+                        <h3 class="card-title">Personal Growth</h3>
+                        <p class="card-text">Lessons learned and strategies for continuous improvement.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lightbulb fa-3x text-primary mb-3"></i>
+                        <h3 class="card-title">Creative Ideas</h3>
+                        <p class="card-text">Innovative solutions and creative approaches to common problems.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="my-skills mb-5">
+        <h2>My Skills</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Technical Skills</h4>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Python</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>JavaScript</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>HTML/CSS</span>
+                        <span>95%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Soft Skills</h4>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Communication</span>
+                        <span>95%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Problem Solving</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Creativity</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="contact-info">
+        <h2>Get in Touch</h2>
+        <p>
+            Have questions, feedback, or just want to say hello? I'd love to hear from you! 
+            Feel free to reach out through the <a href="{{ url_for('main.contact') }}">contact form</a> 
+            or connect with me on social media.
+        </p>
+        <div class="social-icons my-4">
+            <a href="#" class="btn btn-outline-primary me-2">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+            <a href="#" class="btn btn-outline-primary me-2">
+                <i class="fab fa-facebook"></i> Facebook
+            </a>
+            <a href="#" class="btn btn-outline-primary me-2">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+            <a href="#" class="btn btn-outline-primary me-2">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

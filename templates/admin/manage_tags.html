@@ -1,0 +1,186 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="admin-manage-tags">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Manage Tags</h1>
+    </div>
+    
+    <div class="row">
+        <!-- Tag List -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tags</h5>
+                </div>
+                <div class="card-body">
+                    {% if tags %}
+                        <div class="tag-cloud mb-4">
+                            {% for tag in tags %}
+                                <span class="badge bg-secondary p-2 m-1">
+                                    {{ tag.name }}
+                                    <span class="badge bg-light text-dark ms-1">{{ tag.posts.count() }}</span>
+                                    <a href="#" class="text-white ms-1" data-bs-toggle="modal" data-bs-target="#deleteModal{{ tag.id }}">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Slug</th>
+                                        <th>Posts</th>
+                                        <th class="actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tag in tags %}
+                                    <tr>
+                                        <td>{{ tag.name }}</td>
+                                        <td><code>{{ tag.slug }}</code></td>
+                                        <td>{{ tag.posts.count() }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ tag.id }}" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            
+                                            <!-- Delete Modal -->
+                                            <div class="modal fade" id="deleteModal{{ tag.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ tag.id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="deleteModalLabel{{ tag.id }}">Confirm Deletion</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to delete the tag "<strong>{{ tag.name }}</strong>"?</p>
+                                                            <p>This tag is used in <strong>{{ tag.posts.count() }}</strong> posts. If deleted, these posts will no longer be associated with this tag.</p>
+                                                            <p class="text-danger"><strong>Warning:</strong> This action cannot be undone!</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <form action="{{ url_for('admin.delete_tag', id=tag.id) }}" method="post">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p class="mb-0">No tags found. Create your first tag using the form.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Tag Form -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Add New Tag</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {{ form.csrf_token }}
+                        
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Tag name") }}
+                            {% if form.name.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.slug.label(class="form-label") }}
+                            <div class="input-group">
+                                {{ form.slug(class="form-control" + (" is-invalid" if form.slug.errors else ""), placeholder="tag-slug") }}
+                                <button type="button" id="generate-slug" class="btn btn-outline-secondary">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            {% if form.slug.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.slug.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Leave empty to auto-generate from name</small>
+                        </div>
+                        
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Tag Tips</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Use specific, relevant keywords</li>
+                        <li>Aim for 5-10 tags per post</li>
+                        <li>Use consistent naming conventions</li>
+                        <li>Avoid duplicate/similar tags</li>
+                        <li>Consider search engine optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Generate slug from name
+    document.addEventListener('DOMContentLoaded', function() {
+        var nameInput = document.getElementById('name');
+        var slugInput = document.getElementById('slug');
+        var generateBtn = document.getElementById('generate-slug');
+        
+        function generateSlug(text) {
+            return text.toLowerCase()
+                .replace(/[^\w\s-]/g, '') // Remove special characters
+                .replace(/\s+/g, '-')     // Replace spaces with hyphens
+                .replace(/-+/g, '-')      // Replace multiple hyphens with a single hyphen
+                .trim();                  // Trim leading/trailing spaces
+        }
+        
+        if (generateBtn && nameInput && slugInput) {
+            generateBtn.addEventListener('click', function() {
+                if (nameInput.value) {
+                    slugInput.value = generateSlug(nameInput.value);
+                }
+            });
+            
+            // Auto-generate slug if name is typed and slug is empty
+            nameInput.addEventListener('blur', function() {
+                if (this.value && !slugInput.value) {
+                    slugInput.value = generateSlug(this.value);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

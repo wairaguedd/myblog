@@ -1,0 +1,219 @@
+{% extends "admin/base.html" %}
+
+{% block extra_head %}
+<!-- SimpleMDE Markdown Editor CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<style>
+    .CodeMirror {
+        height: 400px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-edit-post">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Edit Post</h1>
+        <div>
+            <a href="{{ url_for('admin.manage_posts') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Posts
+            </a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {{ form.csrf_token }}
+                
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        {{ form.title.label(class="form-label") }}
+                        {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else ""), placeholder="Enter post title") }}
+                        {% if form.title.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4">
+                        {{ form.slug.label(class="form-label") }}
+                        <div class="input-group">
+                            {{ form.slug(class="form-control" + (" is-invalid" if form.slug.errors else ""), placeholder="post-url-slug") }}
+                            <button type="button" id="generate-slug" class="btn btn-outline-secondary">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        {% if form.slug.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.slug.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Leave empty to auto-generate from title</small>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        {{ form.excerpt.label(class="form-label") }}
+                        {{ form.excerpt(class="form-control" + (" is-invalid" if form.excerpt.errors else ""), rows=3, placeholder="Brief summary of the post (optional)") }}
+                        {% if form.excerpt.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.excerpt.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">A short excerpt that appears on the home page and in search results (max 300 characters)</small>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        {{ form.content.label(class="form-label") }}
+                        {{ form.content(class="form-control markdown-editor" + (" is-invalid" if form.content.errors else ""), rows=15) }}
+                        {% if form.content.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.content.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            Use Markdown for formatting. <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Markdown cheatsheet</a>
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form.category_id.label(class="form-label") }}
+                        {{ form.category_id(class="form-select" + (" is-invalid" if form.category_id.errors else "")) }}
+                        {% if form.category_id.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.category_id.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        {{ form.tags.label(class="form-label") }}
+                        {{ form.tags(class="form-control" + (" is-invalid" if form.tags.errors else ""), placeholder="tag1, tag2, tag3") }}
+                        {% if form.tags.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.tags.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Separate tags with commas</small>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Post Information</h6>
+                                <p class="card-text mb-1">
+                                    <small><strong>Created:</strong> {{ post.created_at.strftime('%B %d, %Y %H:%M') }}</small>
+                                </p>
+                                <p class="card-text mb-1">
+                                    <small><strong>Last Updated:</strong> {{ post.updated_at.strftime('%B %d, %Y %H:%M') }}</small>
+                                </p>
+                                <p class="card-text mb-0">
+                                    <small><strong>Comments:</strong> {{ post.comments.count() }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            {{ form.published(class="form-check-input") }}
+                            {{ form.published.label(class="form-check-label") }}
+                        </div>
+                        <small class="form-text text-muted">If unchecked, the post will be saved as a draft</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="{{ url_for('admin.manage_posts') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <a href="{{ url_for('main.post', slug=post.slug) }}" target="_blank" class="btn btn-outline-info">
+                            <i class="fas fa-eye"></i> View Post
+                        </a>
+                    </div>
+                    
+                    <div>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePostModal">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Delete Post Modal -->
+    <div class="modal fade" id="deletePostModal" tabindex="-1" aria-labelledby="deletePostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deletePostModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the post "<strong>{{ post.title }}</strong>"?</p>
+                    <p class="text-danger"><strong>Warning:</strong> This action cannot be undone!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="{{ url_for('admin.delete_post', id=post.id) }}" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- SimpleMDE Markdown Editor JS -->
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    // Initialize SimpleMDE Markdown Editor
+    var simplemde = new SimpleMDE({
+        element: document.querySelector('.markdown-editor'),
+        spellChecker: false,
+        autosave: {
+            enabled: true,
+            unique_id: "edit_post_{{ post.id }}"
+        }
+    });
+    
+    // Generate slug from title
+    document.getElementById('generate-slug').addEventListener('click', function() {
+        var title = document.getElementById('title').value;
+        if (title) {
+            // Create slug from title (lowercase, replace spaces and special chars with hyphens)
+            var slug = title.toLowerCase()
+                .replace(/[^\w\s-]/g, '') // Remove special characters
+                .replace(/\s+/g, '-')     // Replace spaces with hyphens
+                .replace(/-+/g, '-')      // Replace multiple hyphens with a single hyphen
+                .trim();                  // Trim leading/trailing spaces
+                
+            document.getElementById('slug').value = slug;
+        }
+    });
+</script>
+{% endblock %}

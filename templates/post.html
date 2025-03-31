@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block meta_description %}{{ post.excerpt or post.content[:160] }}{% endblock %}
+{% block meta_keywords %}blog, {{ post.title|lower }}, {% for tag in post.tags %}{{ tag.name }}, {% endfor %}{% endblock %}
+
+{% block extra_head %}
+<!-- Social media sharing scripts -->
+<script async defer src="https://platform.twitter.com/widgets.js"></script>
+<script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0"></script>
+{% endblock %}
+
+{% block content %}
+<article class="blog-post">
+    <h1 class="blog-post-title mb-1">{{ post.title }}</h1>
+    
+    <div class="blog-post-meta text-muted mb-4">
+        <span><i class="far fa-calendar-alt"></i> {{ post.created_at.strftime('%B %d, %Y') }}</span>
+        
+        {% if post.category %}
+        <span class="ms-3"><i class="far fa-folder"></i> 
+            <a href="{{ url_for('main.category', slug=post.category.slug) }}" class="text-decoration-none">
+                {{ post.category.name }}
+            </a>
+        </span>
+        {% endif %}
+        
+        {% if post.author %}
+        <span class="ms-3"><i class="far fa-user"></i> {{ post.author.username }}</span>
+        {% endif %}
+    </div>
+    
+    <!-- Tags -->
+    <div class="mb-4">
+        {% for tag in post.tags %}
+        <a href="{{ url_for('main.tag', slug=tag.slug) }}" class="badge bg-secondary text-decoration-none">
+            {{ tag.name }}
+        </a>
+        {% endfor %}
+    </div>
+    
+    <!-- Post Content -->
+    <div class="blog-post-content mb-5">
+        {{ post.get_html_content()|safe }}
+    </div>
+    
+    <!-- Social Sharing -->
+    <div class="blog-post-share mb-5">
+        <h5>Share this post:</h5>
+        <div class="d-flex">
+            <!-- Twitter -->
+            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ post.title }}" 
+               class="btn btn-outline-primary me-2" target="_blank">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+            
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" 
+               class="btn btn-outline-primary me-2" target="_blank">
+                <i class="fab fa-facebook"></i> Facebook
+            </a>
+            
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ post.title }}" 
+               class="btn btn-outline-primary me-2" target="_blank">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+        </div>
+    </div>
+    
+    <!-- Comments Section -->
+    <section class="blog-comments mt-5">
+        <h3 class="mb-4">Comments ({{ comments|length }})</h3>
+        
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <h5 class="card-title">{{ comment.name }}</h5>
+                        <small class="text-muted">{{ comment.created_at.strftime('%B %d, %Y %H:%M') }}</small>
+                    </div>
+                    <p class="card-text">{{ comment.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No comments yet. Be the first to comment!</p>
+        {% endif %}
+        
+        <!-- Comment Form -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4 class="mb-0">Leave a Comment</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {{ form.csrf_token }}
+                    
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                        {% if form.name.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                        {% if form.email.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.content.label(class="form-label") }}
+                        {{ form.content(class="form-control" + (" is-invalid" if form.content.errors else ""), rows=5) }}
+                        {% if form.content.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.content.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    {{ form.submit(class="btn btn-primary") }}
+                </form>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}
+
+{% block sidebar %}
+{{ super() }}
+<!-- Related Posts -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Related Posts</h5>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            {% for related_post in post.category.posts.filter_by(published=True).limit(5).all() 
+                if related_post.id != post.id %}
+            <li class="list-group-item">
+                <a href="{{ url_for('main.post', slug=related_post.slug) }}" class="text-decoration-none">
+                    {{ related_post.title }}
+                </a>
+            </li>
+            {% else %}
+            <li class="list-group-item">No related posts found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
