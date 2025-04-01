@@ -42,6 +42,18 @@
                            href="{{ url_for('main.index') }}">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('main.category', slug='finance') %}active{% endif %}"
+                           href="{{ url_for('main.category', slug='finance') }}">Finance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('main.category', slug='learning') %}active{% endif %}"
+                           href="{{ url_for('main.category', slug='learning') }}">Learning</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == url_for('main.category', slug='ai') %}active{% endif %}"
+                           href="{{ url_for('main.category', slug='ai') }}">AI</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == url_for('main.portfolio') %}active{% endif %}"
                            href="{{ url_for('main.portfolio') }}">Portfolio</a>
                     </li>
