@@ -149,33 +149,34 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>My Blog</h5>
-                    <p>A personal blog about technology, life, and everything in between.</p>
+    <footer class="footer-modern">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5 class="footer-title">My Blog</h5>
+                    <p class="footer-description">A personal blog about technology, life, and everything in between.</p>
                 </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ url_for('main.index') }}" class="text-white">Home</a></li>
-                        <li><a href="{{ url_for('main.portfolio') }}" class="text-white">Portfolio</a></li>
-                        <li><a href="{{ url_for('main.about') }}" class="text-white">About</a></li>
-                        <li><a href="{{ url_for('main.contact') }}" class="text-white">Contact</a></li>
+                <div class="col-lg-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                        <li><a href="{{ url_for('main.portfolio') }}">Portfolio</a></li>
+                        <li><a href="{{ url_for('main.about') }}">About</a></li>
+                        <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5>Follow Me</h5>
-                    <div class="social-icons">
-                        <a href="#" class="text-white me-2"><i class="fab fa-facebook fa-lg"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-github fa-lg"></i></a>
+                <div class="col-lg-4">
+                    <h5 class="footer-title">Connect</h5>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-github fa-lg"></i></a>
                     </div>
                 </div>
             </div>
-            <hr class="my-4">
-            <div class="text-center">
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
                 <p class="mb-0">&copy; {{ current_year }} My Personal Blog. All rights reserved.</p>
             </div>
         </div>

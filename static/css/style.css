@@ -180,16 +180,64 @@ body {
 }
 
 /* Footer */
-footer {
+.footer-modern {
+    background: linear-gradient(45deg, #2D3250, #424769);
+    color: #fff;
     margin-top: 3rem;
 }
 
-footer a {
-    transition: opacity 0.2s ease;
+.footer-title {
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: #F6B17A;
 }
 
-footer a:hover {
-    opacity: 0.8;
+.footer-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #F6B17A;
+    transform: translateX(5px);
+}
+
+.footer-social {
+    display: flex;
+    gap: 1.2rem;
+}
+
+.footer-social .social-icon {
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.footer-social .social-icon:hover {
+    color: #F6B17A;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 1.5rem 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* Responsive adjustments */
