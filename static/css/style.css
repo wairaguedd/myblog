@@ -1,9 +1,9 @@
 /* Main styling for the blog */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa;
+    color: #2D3250;
+    background-color: #F7F7F9;
 }
 
 /* Header and Navigation */
@@ -255,11 +255,37 @@ footer a:hover {
 }
 
 .btn-primary {
-    background: linear-gradient(45deg, #4b6cb7, #182848);
+    background: linear-gradient(45deg, #2D3250, #424769);
     border: none;
+    color: #fff;
 }
 
 .btn-primary:hover {
+    background: linear-gradient(45deg, #424769, #7077A1);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(75, 108, 183, 0.3);
+    box-shadow: 0 5px 15px rgba(45, 50, 80, 0.2);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 15px rgba(45, 50, 80, 0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(45, 50, 80, 0.1);
+}
+
+.navbar {
+    background: #2D3250 !important;
+}
+
+.social-link {
+    color: #7077A1;
+    transition: color 0.3s ease;
+}
+
+.social-link:hover {
+    color: #F6B17A;
 }
