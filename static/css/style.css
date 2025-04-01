@@ -117,14 +117,22 @@ body {
 }
 
 /* About page */
+.about-page .card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+.about-page .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
 .about-page .progress {
     height: 8px;
     margin-bottom: 1rem;
 }
 
-.about-page .card {
-    transition: transform 0.3s ease;
-}
 
 .about-page .card:hover {
     transform: translateY(-5px);
@@ -148,11 +156,11 @@ footer a:hover {
     .blog-post-content {
         font-size: 1rem;
     }
-    
+
     h1 {
         font-size: 1.8rem;
     }
-    
+
     h2 {
         font-size: 1.5rem;
     }
@@ -196,4 +204,21 @@ footer a:hover {
 
 .admin-table .actions {
     width: 150px;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #4b6cb7, #182848);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(75, 108, 183, 0.3);
 }
